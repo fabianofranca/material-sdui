@@ -13,6 +13,8 @@ targets:
   iosApp:
     type: application
     platform: iOS
+    # Gera o esquema "iosApp" (o xcodebuild -scheme precisa dele).
+    scheme: {}
     sources:
       - iosApp
     info:

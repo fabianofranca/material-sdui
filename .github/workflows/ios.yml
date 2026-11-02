@@ -1,0 +1,131 @@
+# Compila o app iOS para o Simulador (sem assinatura), roda no Simulador e tira capturas.
+# Artefatos: as capturas, o .app e o log do xcodebuild.
+name: iOS
+
+on:
+  push:
+    branches: [ccr-39509bf5-h1xt7c]
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  simulator:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      BUNDLE_ID: com.fabianofranca.sdui.ios
+      APP_PATH: build/ios/Build/Products/Debug-iphonesimulator/iosApp.app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Cache do Kotlin/Native
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('gradle/libs.versions.toml') }}
+
+      - name: Versões
+        run: |
+          sw_vers
+          xcodebuild -version
+          java -version
+
+      - name: Gerar o projeto do Xcode (XcodeGen)
+        run: |
+          brew install xcodegen
+          cd iosApp && xcodegen generate
+
+      - name: Compilar para o Simulador
+        run: |
+          mkdir -p build
+          # O passo de build do projeto chama ./gradlew :renderer:embedAndSignAppleFrameworkForXcode.
+          if ! xcodebuild \
+              -project iosApp/iosApp.xcodeproj \
+              -scheme iosApp \
+              -configuration Debug \
+              -sdk iphonesimulator \
+              -destination 'generic/platform=iOS Simulator' \
+              -derivedDataPath build/ios \
+              ARCHS=arm64 ONLY_ACTIVE_ARCH=NO \
+              CODE_SIGNING_ALLOWED=NO \
+              build > build/xcodebuild.log 2>&1; then
+            echo "::group::Erros"
+            grep -nE "error:|e: |FAILURE|What went wrong" build/xcodebuild.log | head -n 80 || true
+            echo "::endgroup::"
+            tail -n 120 build/xcodebuild.log
+            exit 1
+          fi
+          tail -n 5 build/xcodebuild.log
+          ls -la "$APP_PATH"
+
+      - name: Rodar no Simulador e tirar capturas
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, re, sys
+          devices = json.load(sys.stdin)["devices"]
+          def version(runtime):
+              return [int(n) for n in re.findall(r"\d+", runtime.split("iOS")[-1])]
+          for runtime in sorted((r for r in devices if "iOS" in r), key=version, reverse=True):
+              phones = [d for d in devices[runtime] if d["name"].startswith("iPhone")]
+              if phones:
+                  print(sorted(phones, key=lambda d: d["name"])[0]["udid"]); break
+          ')
+          echo "Simulador: $UDID"
+          xcrun simctl list devices | grep "$UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 || true
+          xcrun simctl install "$UDID" "$APP_PATH"
+          mkdir -p screenshots
+
+          capture() { # rota, nome
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+            SIMCTL_CHILD_SDUI_START_ROUTE="$1" xcrun simctl launch "$UDID" "$BUNDLE_ID"
+            sleep 20 # carga da tela no BFF e das imagens
+            xcrun simctl io "$UDID" screenshot "screenshots/$2.png"
+          }
+          capture home home
+          capture catalog catalog
+          capture settings settings
+          xcrun simctl ui "$UDID" appearance dark
+          capture settings settings-dark
+          capture home home-dark
+
+          xcrun simctl spawn "$UDID" log show --last 10m --style compact \
+            --predicate 'process == "iosApp"' > screenshots/app.log 2>&1 || true
+          grep -iE "sdui|error|exception" screenshots/app.log | tail -n 40 || true
+          ls -la screenshots
+
+      - name: Empacotar o .app
+        if: success()
+        run: ditto -c -k --keepParent "$APP_PATH" build/iosApp-simulator.zip
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-screenshots
+          path: screenshots/
+          if-no-files-found: ignore
+
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: iosApp-simulator
+          path: build/iosApp-simulator.zip
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xcodebuild-log
+          path: build/xcodebuild.log
+          if-no-files-found: ignore

@@ -5,11 +5,15 @@ import SduiRenderer
 /// A casca do app: embute o renderer do SDUI (Compose Multiplatform) num UIViewController.
 /// Tela nova não muda este código; só o BFF.
 struct ComposeView: UIViewControllerRepresentable {
-    // No simulador, localhost é o computador. Num aparelho, use o IP da máquina do BFF.
-    let baseUrl = "http://localhost:8080"
+    /// O BFF publicado (deploy/lightsail). Para o BFF local no simulador: "http://localhost:8080".
+    let baseUrl = "https://bff.fabianofranca.com"
+
+    /// A primeira tela. A variável SDUI_START_ROUTE abre outra (o CI usa para as capturas):
+    /// SIMCTL_CHILD_SDUI_START_ROUTE=settings xcrun simctl launch booted com.fabianofranca.sdui.ios
+    let startRoute = ProcessInfo.processInfo.environment["SDUI_START_ROUTE"] ?? "home"
 
     func makeUIViewController(context: Context) -> UIViewController {
-        SduiViewControllerKt.SduiViewController(baseUrl: baseUrl, startRoute: "home")
+        SduiViewControllerKt.SduiViewController(baseUrl: baseUrl, startRoute: startRoute)
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
