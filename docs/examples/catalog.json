@@ -1,0 +1,1079 @@
+{
+  "version": 1,
+  "screen": {
+    "id": "catalog",
+    "title": "Catálogo",
+    "state": {
+      "section": "content",
+      "progress": 0.6,
+      "unread": 3,
+      "name": "",
+      "accepted": false,
+      "wifi": true,
+      "size": "m",
+      "kotlin": true,
+      "compose": false
+    },
+    "topBar": {
+      "type": "TopAppBar",
+      "id": "top",
+      "props": {
+        "title": "Catálogo",
+        "style": "medium",
+        "actions": [
+          {
+            "type": "IconButton",
+            "id": "info",
+            "props": {
+              "icon": "info"
+            },
+            "events": {
+              "onClick": {
+                "type": "openDialog",
+                "id": "about-dialog"
+              }
+            },
+            "a11y": {
+              "label": "Sobre o catálogo"
+            }
+          }
+        ]
+      }
+    },
+    "content": {
+      "type": "Column",
+      "id": "content",
+      "children": [
+        {
+          "type": "Tabs",
+          "id": "sections",
+          "props": {
+            "items": [
+              {
+                "id": "content",
+                "label": "Conteúdo",
+                "testTag": "tab.content"
+              },
+              {
+                "id": "actions",
+                "label": "Ações",
+                "testTag": "tab.actions"
+              },
+              {
+                "id": "forms",
+                "label": "Formulário",
+                "testTag": "tab.forms"
+              }
+            ],
+            "selected": {
+              "$state": "section"
+            },
+            "style": "secondary"
+          }
+        },
+        {
+          "type": "Column",
+          "id": "content-section",
+          "props": {
+            "spacing": 16,
+            "padding": 16,
+            "scroll": true
+          },
+          "children": [
+            {
+              "type": "Text",
+              "id": "typography-title",
+              "props": {
+                "text": "Text",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Text",
+              "id": "display",
+              "props": {
+                "text": "Display small",
+                "style": "displaySmall"
+              }
+            },
+            {
+              "type": "Text",
+              "id": "headline",
+              "props": {
+                "text": "Headline medium",
+                "style": "headlineMedium"
+              }
+            },
+            {
+              "type": "Text",
+              "id": "body",
+              "props": {
+                "text": "Body large com a cor onSurfaceVariant.",
+                "style": "bodyLarge",
+                "color": "onSurfaceVariant"
+              }
+            },
+            {
+              "type": "Text",
+              "id": "label",
+              "props": {
+                "text": "LABEL SMALL",
+                "style": "labelSmall"
+              }
+            },
+            {
+              "type": "Text",
+              "id": "image-title",
+              "props": {
+                "text": "Image e Icon",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Image",
+              "id": "picture",
+              "props": {
+                "url": "https://picsum.photos/seed/catalog/800/400",
+                "aspectRatio": 2.0,
+                "placeholder": "image"
+              },
+              "a11y": {
+                "label": "Uma foto de exemplo"
+              }
+            },
+            {
+              "type": "Row",
+              "id": "icons",
+              "props": {
+                "spacing": 16,
+                "wrap": true
+              },
+              "children": [
+                {
+                  "type": "Icon",
+                  "id": "icon-home",
+                  "props": {
+                    "name": "home",
+                    "tint": "primary"
+                  },
+                  "a11y": {
+                    "label": "home"
+                  }
+                },
+                {
+                  "type": "Icon",
+                  "id": "icon-favorite",
+                  "props": {
+                    "name": "favorite",
+                    "tint": "primary"
+                  },
+                  "a11y": {
+                    "label": "favorite"
+                  }
+                },
+                {
+                  "type": "Icon",
+                  "id": "icon-star",
+                  "props": {
+                    "name": "star",
+                    "tint": "primary"
+                  },
+                  "a11y": {
+                    "label": "star"
+                  }
+                },
+                {
+                  "type": "Icon",
+                  "id": "icon-settings",
+                  "props": {
+                    "name": "settings",
+                    "tint": "primary"
+                  },
+                  "a11y": {
+                    "label": "settings"
+                  }
+                },
+                {
+                  "type": "Icon",
+                  "id": "icon-notifications",
+                  "props": {
+                    "name": "notifications",
+                    "tint": "primary"
+                  },
+                  "a11y": {
+                    "label": "notifications"
+                  }
+                },
+                {
+                  "type": "Badge",
+                  "id": "badge",
+                  "props": {
+                    "count": {
+                      "$state": "unread"
+                    }
+                  },
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "id": "badge-icon",
+                      "props": {
+                        "name": "email"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Badge",
+                  "id": "dot",
+                  "children": [
+                    {
+                      "type": "Icon",
+                      "id": "dot-icon",
+                      "props": {
+                        "name": "notifications"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Text",
+              "id": "card-title",
+              "props": {
+                "text": "Card",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Card",
+              "id": "card-filled",
+              "children": [
+                {
+                  "type": "Text",
+                  "id": "card-filled-title",
+                  "props": {
+                    "text": "Card filled",
+                    "style": "titleMedium"
+                  }
+                },
+                {
+                  "type": "Text",
+                  "id": "card-filled-text",
+                  "props": {
+                    "text": "Com onClick, o card todo é clicável."
+                  }
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Card filled tocado"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "card-elevated",
+              "props": {
+                "style": "elevated"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "id": "card-elevated-title",
+                  "props": {
+                    "text": "Card elevated",
+                    "style": "titleMedium"
+                  }
+                },
+                {
+                  "type": "Text",
+                  "id": "card-elevated-text",
+                  "props": {
+                    "text": "Com onClick, o card todo é clicável."
+                  }
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Card elevated tocado"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "card-outlined",
+              "props": {
+                "style": "outlined"
+              },
+              "children": [
+                {
+                  "type": "Text",
+                  "id": "card-outlined-title",
+                  "props": {
+                    "text": "Card outlined",
+                    "style": "titleMedium"
+                  }
+                },
+                {
+                  "type": "Text",
+                  "id": "card-outlined-text",
+                  "props": {
+                    "text": "Com onClick, o card todo é clicável."
+                  }
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Card outlined tocado"
+                }
+              }
+            },
+            {
+              "type": "Text",
+              "id": "list-title",
+              "props": {
+                "text": "ListItem e Divider",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "ListItem",
+              "id": "list-1",
+              "props": {
+                "headline": "Headline",
+                "supporting": "Supporting text",
+                "overline": "Overline",
+                "leading": {
+                  "type": "Icon",
+                  "id": "list-1-icon",
+                  "props": {
+                    "name": "person"
+                  }
+                },
+                "trailing": {
+                  "type": "Text",
+                  "id": "list-1-trailing",
+                  "props": {
+                    "text": "100+",
+                    "style": "labelSmall"
+                  }
+                }
+              }
+            },
+            {
+              "type": "Divider",
+              "id": "list-divider",
+              "props": {
+                "inset": 16
+              }
+            },
+            {
+              "type": "ListItem",
+              "id": "list-2",
+              "props": {
+                "headline": "Com um Switch no fim",
+                "trailing": {
+                  "type": "Switch",
+                  "id": "list-2-switch",
+                  "props": {
+                    "checked": {
+                      "$state": "wifi"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Text",
+              "id": "progress-title",
+              "props": {
+                "text": "ProgressIndicator",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "ProgressIndicator",
+              "id": "progress-linear",
+              "props": {
+                "kind": "linear",
+                "progress": {
+                  "$state": "progress"
+                }
+              }
+            },
+            {
+              "type": "Row",
+              "id": "progress-row",
+              "props": {
+                "spacing": 24
+              },
+              "children": [
+                {
+                  "type": "ProgressIndicator",
+                  "id": "progress-circular",
+                  "props": {
+                    "progress": 0.75
+                  }
+                },
+                {
+                  "type": "ProgressIndicator",
+                  "id": "progress-indeterminate"
+                }
+              ]
+            },
+            {
+              "type": "Text",
+              "id": "box-title",
+              "props": {
+                "text": "Box e Spacer",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Box",
+              "id": "box",
+              "props": {
+                "contentAlignment": "center",
+                "padding": 8
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "box-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/box/600/200",
+                    "aspectRatio": 3.0
+                  }
+                },
+                {
+                  "type": "Text",
+                  "id": "box-text",
+                  "props": {
+                    "text": "Texto sobre a imagem",
+                    "style": "titleLarge",
+                    "color": "onPrimary"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Spacer",
+              "id": "spacer",
+              "props": {
+                "size": 32
+              }
+            }
+          ],
+          "visible": {
+            "$state": "section",
+            "equals": "content"
+          }
+        },
+        {
+          "type": "Column",
+          "id": "actions-section",
+          "props": {
+            "spacing": 16,
+            "padding": 16,
+            "scroll": true
+          },
+          "children": [
+            {
+              "type": "Text",
+              "id": "buttons-title",
+              "props": {
+                "text": "Button",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Button",
+              "id": "button-filled",
+              "props": {
+                "label": "Filled",
+                "icon": "check"
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Button filled"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "button-tonal",
+              "props": {
+                "label": "Tonal",
+                "style": "tonal",
+                "icon": "check"
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Button tonal"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "button-elevated",
+              "props": {
+                "label": "Elevated",
+                "style": "elevated",
+                "icon": "check"
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Button elevated"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "button-outlined",
+              "props": {
+                "label": "Outlined",
+                "style": "outlined",
+                "icon": "check"
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Button outlined"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "button-text",
+              "props": {
+                "label": "Text",
+                "style": "text",
+                "icon": "check"
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Button text"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "button-disabled",
+              "props": {
+                "label": "Desabilitado",
+                "enabled": false
+              }
+            },
+            {
+              "type": "Button",
+              "id": "button-loading",
+              "props": {
+                "label": "Carregando",
+                "loading": true
+              }
+            },
+            {
+              "type": "Text",
+              "id": "icon-buttons-title",
+              "props": {
+                "text": "IconButton",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Row",
+              "id": "icon-buttons",
+              "props": {
+                "spacing": 8,
+                "wrap": true
+              },
+              "children": [
+                {
+                  "type": "IconButton",
+                  "id": "icon-button-standard",
+                  "props": {
+                    "icon": "favorite"
+                  },
+                  "a11y": {
+                    "label": "Favoritar (standard)"
+                  }
+                },
+                {
+                  "type": "IconButton",
+                  "id": "icon-button-filled",
+                  "props": {
+                    "icon": "favorite",
+                    "style": "filled"
+                  },
+                  "a11y": {
+                    "label": "Favoritar (filled)"
+                  }
+                },
+                {
+                  "type": "IconButton",
+                  "id": "icon-button-tonal",
+                  "props": {
+                    "icon": "favorite",
+                    "style": "tonal"
+                  },
+                  "a11y": {
+                    "label": "Favoritar (tonal)"
+                  }
+                },
+                {
+                  "type": "IconButton",
+                  "id": "icon-button-outlined",
+                  "props": {
+                    "icon": "favorite",
+                    "style": "outlined"
+                  },
+                  "a11y": {
+                    "label": "Favoritar (outlined)"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Text",
+              "id": "chips-title",
+              "props": {
+                "text": "Chip",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Row",
+              "id": "chips",
+              "props": {
+                "spacing": 8,
+                "wrap": true
+              },
+              "children": [
+                {
+                  "type": "Chip",
+                  "id": "chip-assist",
+                  "props": {
+                    "label": "Assist",
+                    "icon": "call"
+                  }
+                },
+                {
+                  "type": "Chip",
+                  "id": "chip-filter",
+                  "props": {
+                    "label": "Kotlin",
+                    "kind": "filter",
+                    "selected": {
+                      "$state": "kotlin"
+                    }
+                  }
+                },
+                {
+                  "type": "Chip",
+                  "id": "chip-input",
+                  "props": {
+                    "label": "Compose",
+                    "kind": "input",
+                    "selected": {
+                      "$state": "compose"
+                    }
+                  }
+                },
+                {
+                  "type": "Chip",
+                  "id": "chip-suggestion",
+                  "props": {
+                    "label": "Sugestão",
+                    "kind": "suggestion"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Text",
+              "id": "snackbar-title",
+              "props": {
+                "text": "Snackbar e Dialog",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Button",
+              "id": "show-snackbar",
+              "props": {
+                "label": "Mostrar Snackbar",
+                "style": "tonal"
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Item arquivado",
+                  "actionLabel": "Desfazer",
+                  "action": {
+                    "type": "showSnackbar",
+                    "message": "Desfeito"
+                  },
+                  "duration": "long"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "show-dialog",
+              "props": {
+                "label": "Abrir Dialog",
+                "style": "tonal"
+              },
+              "events": {
+                "onClick": {
+                  "type": "openDialog",
+                  "id": "about-dialog"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "show-sheet",
+              "props": {
+                "label": "Abrir BottomSheet",
+                "style": "tonal"
+              },
+              "events": {
+                "onClick": {
+                  "type": "openSheet",
+                  "id": "catalog-sheet"
+                }
+              }
+            },
+            {
+              "type": "Button",
+              "id": "set-progress",
+              "props": {
+                "label": "Progresso para 100%",
+                "style": "outlined"
+              },
+              "events": {
+                "onClick": {
+                  "type": "sequence",
+                  "actions": [
+                    {
+                      "type": "setState",
+                      "key": "progress",
+                      "value": 1.0
+                    },
+                    {
+                      "type": "setState",
+                      "key": "unread",
+                      "value": 0
+                    },
+                    {
+                      "type": "showSnackbar",
+                      "message": "Progresso e selo atualizados"
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "visible": {
+            "$state": "section",
+            "equals": "actions"
+          }
+        },
+        {
+          "type": "Column",
+          "id": "forms-section",
+          "props": {
+            "spacing": 16,
+            "padding": 16,
+            "scroll": true
+          },
+          "children": [
+            {
+              "type": "Text",
+              "id": "text-fields-title",
+              "props": {
+                "text": "TextField",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "TextField",
+              "id": "name",
+              "props": {
+                "value": {
+                  "$state": "name"
+                },
+                "label": "Nome (filled)",
+                "placeholder": "Como você se chama?"
+              }
+            },
+            {
+              "type": "TextField",
+              "id": "phone",
+              "props": {
+                "label": "Telefone (outlined)",
+                "keyboard": "phone",
+                "style": "outlined"
+              }
+            },
+            {
+              "type": "TextField",
+              "id": "password",
+              "props": {
+                "label": "Senha",
+                "keyboard": "password",
+                "style": "outlined"
+              }
+            },
+            {
+              "type": "TextField",
+              "id": "with-error",
+              "props": {
+                "label": "Com erro",
+                "error": "Este campo tem um erro"
+              }
+            },
+            {
+              "type": "Text",
+              "id": "hello",
+              "props": {
+                "text": {
+                  "$state": "name"
+                },
+                "style": "titleMedium"
+              },
+              "visible": {
+                "$state": "name"
+              }
+            },
+            {
+              "type": "Text",
+              "id": "toggles-title",
+              "props": {
+                "text": "Checkbox, Switch e RadioGroup",
+                "style": "titleMedium",
+                "color": "primary"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Checkbox",
+              "id": "accept",
+              "props": {
+                "checked": {
+                  "$state": "accepted"
+                },
+                "label": "Aceito os termos"
+              }
+            },
+            {
+              "type": "Switch",
+              "id": "wifi",
+              "props": {
+                "checked": {
+                  "$state": "wifi"
+                },
+                "label": "Wi-Fi"
+              }
+            },
+            {
+              "type": "RadioGroup",
+              "id": "size",
+              "props": {
+                "options": [
+                  {
+                    "value": "s",
+                    "label": "Pequeno"
+                  },
+                  {
+                    "value": "m",
+                    "label": "Médio"
+                  },
+                  {
+                    "value": "l",
+                    "label": "Grande"
+                  },
+                  {
+                    "value": "xl",
+                    "label": "Esgotado",
+                    "enabled": false
+                  }
+                ],
+                "selected": {
+                  "$state": "size"
+                }
+              }
+            }
+          ],
+          "visible": {
+            "$state": "section",
+            "equals": "forms"
+          }
+        }
+      ]
+    },
+    "bottomBar": {
+      "type": "NavigationBar",
+      "id": "nav",
+      "props": {
+        "items": [
+          {
+            "id": "home",
+            "icon": "home",
+            "label": "Início",
+            "route": "home",
+            "testTag": "nav.home"
+          },
+          {
+            "id": "catalog",
+            "icon": "list",
+            "label": "Catálogo",
+            "route": "catalog",
+            "testTag": "nav.catalog"
+          },
+          {
+            "id": "settings",
+            "icon": "settings",
+            "label": "Ajustes",
+            "route": "settings",
+            "testTag": "nav.settings"
+          }
+        ],
+        "selected": "catalog"
+      }
+    },
+    "floating": {
+      "type": "FAB",
+      "id": "fab",
+      "props": {
+        "icon": "add"
+      },
+      "events": {
+        "onClick": {
+          "type": "openSheet",
+          "id": "catalog-sheet"
+        }
+      },
+      "a11y": {
+        "label": "Abrir o BottomSheet"
+      }
+    },
+    "modals": [
+      {
+        "type": "BottomSheet",
+        "id": "catalog-sheet",
+        "children": [
+          {
+            "type": "Column",
+            "id": "sheet-body",
+            "props": {
+              "spacing": 12
+            },
+            "children": [
+              {
+                "type": "Text",
+                "id": "sheet-title",
+                "props": {
+                  "text": "BottomSheet",
+                  "style": "titleLarge"
+                }
+              },
+              {
+                "type": "Text",
+                "id": "sheet-text",
+                "props": {
+                  "text": "Abre com openSheet e fecha com closeSheet, arrastando ou tocando fora."
+                }
+              },
+              {
+                "type": "Button",
+                "id": "sheet-close",
+                "props": {
+                  "label": "Fechar",
+                  "fullWidth": true
+                },
+                "events": {
+                  "onClick": {
+                    "type": "closeSheet"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Dialog",
+        "id": "about-dialog",
+        "props": {
+          "title": "Catálogo do SDUI",
+          "text": "Cada componente desta tela veio do BFF em JSON e foi desenhado com o Material 3.",
+          "icon": "info",
+          "confirm": {
+            "type": "Button",
+            "id": "about-ok",
+            "props": {
+              "label": "Entendi",
+              "style": "text"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

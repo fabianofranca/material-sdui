@@ -1,0 +1,1351 @@
+{
+  "version": 1,
+  "screen": {
+    "id": "home",
+    "title": "Início",
+    "state": {
+      "tab": "for-you",
+      "page": 2,
+      "postText": ""
+    },
+    "topBar": {
+      "type": "TopAppBar",
+      "id": "top",
+      "props": {
+        "title": "Início",
+        "style": "center",
+        "actions": [
+          {
+            "type": "IconButton",
+            "id": "search",
+            "props": {
+              "icon": "search"
+            },
+            "events": {
+              "onClick": {
+                "type": "showSnackbar",
+                "message": "A busca chega na próxima versão."
+              }
+            },
+            "a11y": {
+              "label": "Buscar"
+            }
+          }
+        ]
+      }
+    },
+    "content": {
+      "type": "Column",
+      "id": "content",
+      "children": [
+        {
+          "type": "Tabs",
+          "id": "tabs",
+          "props": {
+            "items": [
+              {
+                "id": "for-you",
+                "label": "Para você",
+                "testTag": "tab.for-you"
+              },
+              {
+                "id": "following",
+                "label": "Seguindo",
+                "testTag": "tab.following"
+              }
+            ],
+            "selected": {
+              "$state": "tab"
+            }
+          }
+        },
+        {
+          "type": "LazyColumn",
+          "id": "feed",
+          "props": {
+            "spacing": 12,
+            "padding": 16
+          },
+          "children": [
+            {
+              "type": "Card",
+              "id": "article-a1",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a1-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui1/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de Compose na prática #1"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a1-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a1-title",
+                      "props": {
+                        "text": "Compose na prática #1",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a1-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 1 sobre Compose, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a1-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a1-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a1-author",
+                          "props": {
+                            "text": "Bruno Lima",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a1"
+                  }
+                }
+              },
+              "testTag": "feed.a1",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a1"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a2",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a2-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui2/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de SDUI na prática #2"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a2-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a2-title",
+                      "props": {
+                        "text": "SDUI na prática #2",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a2-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 2 sobre SDUI, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a2-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a2-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a2-author",
+                          "props": {
+                            "text": "Carla Dias",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a2"
+                  }
+                }
+              },
+              "testTag": "feed.a2",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a2"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a3",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a3-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui3/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de Material 3 na prática #3"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a3-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a3-title",
+                      "props": {
+                        "text": "Material 3 na prática #3",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a3-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 3 sobre Material 3, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a3-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a3-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a3-author",
+                          "props": {
+                            "text": "Davi Rocha",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a3"
+                  }
+                }
+              },
+              "testTag": "feed.a3",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a3"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a4",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a4-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui4/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de Ktor na prática #4"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a4-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a4-title",
+                      "props": {
+                        "text": "Ktor na prática #4",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a4-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 4 sobre Ktor, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a4-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a4-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a4-author",
+                          "props": {
+                            "text": "Ana Souza",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a4"
+                  }
+                }
+              },
+              "testTag": "feed.a4",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a4"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a5",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a5-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui5/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de KMP na prática #5"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a5-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a5-title",
+                      "props": {
+                        "text": "KMP na prática #5",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a5-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 5 sobre KMP, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a5-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a5-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a5-author",
+                          "props": {
+                            "text": "Bruno Lima",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a5"
+                  }
+                }
+              },
+              "testTag": "feed.a5",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a5"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a6",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a6-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui6/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de iOS na prática #6"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a6-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a6-title",
+                      "props": {
+                        "text": "iOS na prática #6",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a6-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 6 sobre iOS, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a6-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a6-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a6-author",
+                          "props": {
+                            "text": "Carla Dias",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a6"
+                  }
+                }
+              },
+              "testTag": "feed.a6",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a6"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a7",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a7-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui7/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de Kotlin na prática #7"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a7-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a7-title",
+                      "props": {
+                        "text": "Kotlin na prática #7",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a7-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 7 sobre Kotlin, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a7-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a7-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a7-author",
+                          "props": {
+                            "text": "Davi Rocha",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a7"
+                  }
+                }
+              },
+              "testTag": "feed.a7",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a7"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a8",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a8-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui8/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de Compose na prática #8"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a8-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a8-title",
+                      "props": {
+                        "text": "Compose na prática #8",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a8-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 8 sobre Compose, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a8-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a8-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a8-author",
+                          "props": {
+                            "text": "Ana Souza",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a8"
+                  }
+                }
+              },
+              "testTag": "feed.a8",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a8"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a9",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a9-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui9/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de SDUI na prática #9"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a9-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a9-title",
+                      "props": {
+                        "text": "SDUI na prática #9",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a9-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 9 sobre SDUI, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a9-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a9-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a9-author",
+                          "props": {
+                            "text": "Bruno Lima",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a9"
+                  }
+                }
+              },
+              "testTag": "feed.a9",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a9"
+                }
+              }
+            },
+            {
+              "type": "Card",
+              "id": "article-a10",
+              "props": {
+                "style": "elevated",
+                "padding": 0,
+                "spacing": 0
+              },
+              "children": [
+                {
+                  "type": "Image",
+                  "id": "article-a10-image",
+                  "props": {
+                    "url": "https://picsum.photos/seed/sdui10/800/450",
+                    "aspectRatio": 1.7777778,
+                    "placeholder": "image"
+                  },
+                  "a11y": {
+                    "label": "Capa de Material 3 na prática #10"
+                  }
+                },
+                {
+                  "type": "Column",
+                  "id": "article-a10-body",
+                  "props": {
+                    "spacing": 4,
+                    "padding": 16
+                  },
+                  "children": [
+                    {
+                      "type": "Text",
+                      "id": "article-a10-title",
+                      "props": {
+                        "text": "Material 3 na prática #10",
+                        "style": "titleMedium"
+                      }
+                    },
+                    {
+                      "type": "Text",
+                      "id": "article-a10-summary",
+                      "props": {
+                        "text": "Um resumo curto do artigo 10 sobre Material 3, para caber em duas linhas no card.",
+                        "color": "onSurfaceVariant",
+                        "maxLines": 2
+                      }
+                    },
+                    {
+                      "type": "Row",
+                      "id": "article-a10-meta",
+                      "props": {
+                        "spacing": 4,
+                        "padding": {
+                          "start": 0,
+                          "top": 8,
+                          "end": 0,
+                          "bottom": 0
+                        }
+                      },
+                      "children": [
+                        {
+                          "type": "Icon",
+                          "id": "article-a10-author-icon",
+                          "props": {
+                            "name": "person",
+                            "tint": "onSurfaceVariant",
+                            "size": 16
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "id": "article-a10-author",
+                          "props": {
+                            "text": "Carla Dias",
+                            "style": "labelMedium",
+                            "color": "onSurfaceVariant"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "events": {
+                "onClick": {
+                  "type": "navigate",
+                  "route": "article",
+                  "params": {
+                    "id": "a10"
+                  }
+                }
+              },
+              "testTag": "feed.a10",
+              "analytics": {
+                "name": "article_card",
+                "properties": {
+                  "articleId": "a10"
+                }
+              }
+            }
+          ],
+          "events": {
+            "onRefresh": {
+              "type": "refreshScreen"
+            },
+            "onLoadMore": {
+              "type": "request",
+              "endpoint": "/api/articles",
+              "query": {
+                "page": {
+                  "$state": "page"
+                }
+              }
+            }
+          },
+          "visible": {
+            "$state": "tab",
+            "equals": "for-you"
+          },
+          "testTag": "feed"
+        },
+        {
+          "type": "LazyColumn",
+          "id": "following",
+          "children": [
+            {
+              "type": "ListItem",
+              "id": "following-0",
+              "props": {
+                "headline": "Ana Souza",
+                "supporting": "3 artigos novos",
+                "leading": {
+                  "type": "Icon",
+                  "id": "following-0-icon",
+                  "props": {
+                    "name": "account_circle",
+                    "size": 40
+                  }
+                },
+                "trailing": {
+                  "type": "Icon",
+                  "id": "following-0-arrow",
+                  "props": {
+                    "name": "keyboard_arrow_right"
+                  }
+                }
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Perfil de Ana Souza"
+                }
+              }
+            },
+            {
+              "type": "ListItem",
+              "id": "following-1",
+              "props": {
+                "headline": "Bruno Lima",
+                "supporting": "4 artigos novos",
+                "leading": {
+                  "type": "Icon",
+                  "id": "following-1-icon",
+                  "props": {
+                    "name": "account_circle",
+                    "size": 40
+                  }
+                },
+                "trailing": {
+                  "type": "Icon",
+                  "id": "following-1-arrow",
+                  "props": {
+                    "name": "keyboard_arrow_right"
+                  }
+                }
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Perfil de Bruno Lima"
+                }
+              }
+            },
+            {
+              "type": "ListItem",
+              "id": "following-2",
+              "props": {
+                "headline": "Carla Dias",
+                "supporting": "5 artigos novos",
+                "leading": {
+                  "type": "Icon",
+                  "id": "following-2-icon",
+                  "props": {
+                    "name": "account_circle",
+                    "size": 40
+                  }
+                },
+                "trailing": {
+                  "type": "Icon",
+                  "id": "following-2-arrow",
+                  "props": {
+                    "name": "keyboard_arrow_right"
+                  }
+                }
+              },
+              "events": {
+                "onClick": {
+                  "type": "showSnackbar",
+                  "message": "Perfil de Carla Dias"
+                }
+              }
+            }
+          ],
+          "visible": {
+            "$state": "tab",
+            "equals": "following"
+          }
+        }
+      ]
+    },
+    "bottomBar": {
+      "type": "NavigationBar",
+      "id": "nav",
+      "props": {
+        "items": [
+          {
+            "id": "home",
+            "icon": "home",
+            "label": "Início",
+            "route": "home",
+            "testTag": "nav.home"
+          },
+          {
+            "id": "catalog",
+            "icon": "list",
+            "label": "Catálogo",
+            "route": "catalog",
+            "testTag": "nav.catalog"
+          },
+          {
+            "id": "settings",
+            "icon": "settings",
+            "label": "Ajustes",
+            "route": "settings",
+            "testTag": "nav.settings"
+          }
+        ],
+        "selected": "home"
+      }
+    },
+    "floating": {
+      "type": "FAB",
+      "id": "new-post",
+      "props": {
+        "icon": "edit",
+        "label": "Escrever"
+      },
+      "events": {
+        "onClick": {
+          "type": "openSheet",
+          "id": "new-post-sheet"
+        }
+      },
+      "testTag": "home.newPost"
+    },
+    "modals": [
+      {
+        "type": "BottomSheet",
+        "id": "new-post-sheet",
+        "children": [
+          {
+            "type": "Column",
+            "id": "new-post-body",
+            "props": {
+              "spacing": 16
+            },
+            "children": [
+              {
+                "type": "Text",
+                "id": "new-post-title",
+                "props": {
+                  "text": "Nova publicação",
+                  "style": "titleLarge"
+                },
+                "a11y": {
+                  "heading": true
+                }
+              },
+              {
+                "type": "TextField",
+                "id": "post-text",
+                "props": {
+                  "value": {
+                    "$state": "postText"
+                  },
+                  "label": "O que você quer contar?",
+                  "supportingText": "Até 280 caracteres",
+                  "maxLength": 280,
+                  "style": "outlined",
+                  "singleLine": false,
+                  "validation": [
+                    {
+                      "type": "required",
+                      "message": "Escreva alguma coisa antes de publicar"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Button",
+                "id": "publish",
+                "props": {
+                  "label": "Publicar",
+                  "icon": "send",
+                  "fullWidth": true
+                },
+                "events": {
+                  "onClick": {
+                    "type": "validate",
+                    "fields": [
+                      "post-text"
+                    ],
+                    "onValid": {
+                      "type": "request",
+                      "method": "POST",
+                      "endpoint": "/api/posts",
+                      "body": {
+                        "text": {
+                          "$state": "postText"
+                        }
+                      },
+                      "onSuccess": {
+                        "type": "sequence",
+                        "actions": [
+                          {
+                            "type": "closeSheet",
+                            "id": "new-post-sheet"
+                          },
+                          {
+                            "type": "setState",
+                            "key": "postText",
+                            "value": ""
+                          },
+                          {
+                            "type": "showSnackbar",
+                            "message": "Publicado!"
+                          }
+                        ]
+                      },
+                      "onError": {
+                        "type": "showSnackbar",
+                        "message": "Não deu certo. Tente de novo."
+                      }
+                    }
+                  }
+                },
+                "testTag": "home.publish"
+              },
+              {
+                "type": "Button",
+                "id": "cancel-post",
+                "props": {
+                  "label": "Cancelar",
+                  "style": "text",
+                  "fullWidth": true
+                },
+                "events": {
+                  "onClick": {
+                    "type": "closeSheet",
+                    "id": "new-post-sheet"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "events": {
+          "onDismiss": {
+            "type": "track",
+            "name": "new_post_dismissed"
+          }
+        }
+      }
+    ],
+    "events": {
+      "onAppear": {
+        "type": "track",
+        "name": "home_view"
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "state": {
+    "page": 3
+  },
+  "append": {
+    "feed": [
+      {
+        "type": "Card",
+        "id": "article-a11",
+        "props": {
+          "style": "elevated",
+          "padding": 0,
+          "spacing": 0
+        },
+        "children": [
+          {
+            "type": "Image",
+            "id": "article-a11-image",
+            "props": {
+              "url": "https://picsum.photos/seed/sdui11/800/450",
+              "aspectRatio": 1.7777778,
+              "placeholder": "image"
+            },
+            "a11y": {
+              "label": "Capa de Ktor na prática #11"
+            }
+          },
+          {
+            "type": "Column",
+            "id": "article-a11-body",
+            "props": {
+              "spacing": 4,
+              "padding": 16
+            },
+            "children": [
+              {
+                "type": "Text",
+                "id": "article-a11-title",
+                "props": {
+                  "text": "Ktor na prática #11",
+                  "style": "titleMedium"
+                }
+              },
+              {
+                "type": "Text",
+                "id": "article-a11-summary",
+                "props": {
+                  "text": "Um resumo curto do artigo 11 sobre Ktor, para caber em duas linhas no card.",
+                  "color": "onSurfaceVariant",
+                  "maxLines": 2
+                }
+              },
+              {
+                "type": "Row",
+                "id": "article-a11-meta",
+                "props": {
+                  "spacing": 4,
+                  "padding": {
+                    "start": 0,
+                    "top": 8,
+                    "end": 0,
+                    "bottom": 0
+                  }
+                },
+                "children": [
+                  {
+                    "type": "Icon",
+                    "id": "article-a11-author-icon",
+                    "props": {
+                      "name": "person",
+                      "tint": "onSurfaceVariant",
+                      "size": 16
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "id": "article-a11-author",
+                    "props": {
+                      "text": "Davi Rocha",
+                      "style": "labelMedium",
+                      "color": "onSurfaceVariant"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "events": {
+          "onClick": {
+            "type": "navigate",
+            "route": "article",
+            "params": {
+              "id": "a11"
+            }
+          }
+        },
+        "testTag": "feed.a11",
+        "analytics": {
+          "name": "article_card",
+          "properties": {
+            "articleId": "a11"
+          }
+        }
+      }
+    ]
+  }
+}

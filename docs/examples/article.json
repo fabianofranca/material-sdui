@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "screen": {
+    "id": "article",
+    "title": "Compose na prática #1",
+    "state": {
+      "saved": false
+    },
+    "topBar": {
+      "type": "TopAppBar",
+      "id": "top",
+      "props": {
+        "title": "Compose na prática #1",
+        "navigationIcon": {
+          "type": "IconButton",
+          "id": "back",
+          "props": {
+            "icon": "arrow_back"
+          },
+          "events": {
+            "onClick": {
+              "type": "navigateBack"
+            }
+          },
+          "a11y": {
+            "label": "Voltar"
+          }
+        },
+        "actions": [
+          {
+            "type": "IconButton",
+            "id": "share",
+            "props": {
+              "icon": "share"
+            },
+            "events": {
+              "onClick": {
+                "type": "openUrl",
+                "url": "https://kotlinlang.org/docs/multiplatform.html"
+              }
+            },
+            "a11y": {
+              "label": "Compartilhar"
+            }
+          }
+        ]
+      }
+    },
+    "content": {
+      "type": "Column",
+      "id": "content",
+      "props": {
+        "spacing": 16,
+        "padding": {
+          "start": 0,
+          "top": 0,
+          "end": 0,
+          "bottom": 24
+        },
+        "scroll": true
+      },
+      "children": [
+        {
+          "type": "Image",
+          "id": "cover",
+          "props": {
+            "url": "https://picsum.photos/seed/sdui1/800/450",
+            "aspectRatio": 1.7777778,
+            "placeholder": "image"
+          },
+          "a11y": {
+            "label": "Capa do artigo"
+          }
+        },
+        {
+          "type": "Column",
+          "id": "body",
+          "props": {
+            "spacing": 12,
+            "padding": {
+              "start": 16,
+              "top": 0,
+              "end": 16,
+              "bottom": 0
+            }
+          },
+          "children": [
+            {
+              "type": "Text",
+              "id": "title",
+              "props": {
+                "text": "Compose na prática #1",
+                "style": "headlineSmall"
+              },
+              "a11y": {
+                "heading": true
+              }
+            },
+            {
+              "type": "Row",
+              "id": "meta",
+              "props": {
+                "spacing": 8
+              },
+              "children": [
+                {
+                  "type": "Icon",
+                  "id": "author-icon",
+                  "props": {
+                    "name": "person",
+                    "tint": "onSurfaceVariant",
+                    "size": 18
+                  }
+                },
+                {
+                  "type": "Text",
+                  "id": "author",
+                  "props": {
+                    "text": "Bruno Lima",
+                    "style": "labelLarge",
+                    "color": "onSurfaceVariant"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Row",
+              "id": "tags",
+              "props": {
+                "spacing": 8,
+                "wrap": true
+              },
+              "children": [
+                {
+                  "type": "Chip",
+                  "id": "tag-0",
+                  "props": {
+                    "label": "Compose",
+                    "kind": "suggestion"
+                  }
+                },
+                {
+                  "type": "Chip",
+                  "id": "tag-1",
+                  "props": {
+                    "label": "Opinião",
+                    "kind": "suggestion"
+                  }
+                },
+                {
+                  "type": "Chip",
+                  "id": "save",
+                  "props": {
+                    "label": "Salvar",
+                    "kind": "filter",
+                    "selected": {
+                      "$state": "saved"
+                    },
+                    "icon": "favorite_border"
+                  },
+                  "events": {
+                    "onChange": {
+                      "type": "track",
+                      "name": "article_save_toggle",
+                      "properties": {
+                        "articleId": "a1",
+                        "saved": {
+                          "$state": "saved"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "Text",
+              "id": "text",
+              "props": {
+                "text": "Parágrafo 1 do artigo 1. Server-Driven UI deixa o backend descrever a tela, e o app só desenha com os componentes do Material 3.\n\nParágrafo 2 do artigo 1. Server-Driven UI deixa o backend descrever a tela, e o app só desenha com os componentes do Material 3.\n\nParágrafo 3 do artigo 1. Server-Driven UI deixa o backend descrever a tela, e o app só desenha com os componentes do Material 3.\n\nParágrafo 4 do artigo 1. Server-Driven UI deixa o backend descrever a tela, e o app só desenha com os componentes do Material 3.",
+                "style": "bodyLarge"
+              }
+            },
+            {
+              "type": "Column",
+              "id": "actions",
+              "props": {
+                "spacing": 8,
+                "horizontalAlignment": "center"
+              },
+              "children": [
+                {
+                  "type": "Button",
+                  "id": "open",
+                  "props": {
+                    "label": "Abrir no navegador",
+                    "style": "outlined",
+                    "icon": "share"
+                  },
+                  "events": {
+                    "onClick": {
+                      "type": "openUrl",
+                      "url": "https://kotlinlang.org/docs/multiplatform.html",
+                      "mode": "inApp"
+                    }
+                  }
+                },
+                {
+                  "type": "Button",
+                  "id": "report",
+                  "props": {
+                    "label": "Reportar um problema",
+                    "style": "text"
+                  },
+                  "events": {
+                    "onClick": {
+                      "type": "showSnackbar",
+                      "message": "Obrigado! Vamos olhar."
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "events": {
+      "onAppear": {
+        "type": "track",
+        "name": "article_view",
+        "properties": {
+          "articleId": "a1"
+        }
+      }
+    }
+  }
+}

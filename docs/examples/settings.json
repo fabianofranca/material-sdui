@@ -1,0 +1,358 @@
+{
+  "version": 1,
+  "screen": {
+    "id": "settings",
+    "title": "Configurações",
+    "state": {
+      "notifications": true,
+      "newsletter": false,
+      "email": "ana@exemplo.com",
+      "theme": "system"
+    },
+    "topBar": {
+      "type": "TopAppBar",
+      "id": "top",
+      "props": {
+        "title": "Configurações"
+      }
+    },
+    "content": {
+      "type": "Column",
+      "id": "content",
+      "props": {
+        "spacing": 16,
+        "padding": 16,
+        "scroll": true
+      },
+      "children": [
+        {
+          "type": "Card",
+          "id": "account",
+          "props": {
+            "style": "outlined"
+          },
+          "children": [
+            {
+              "type": "ListItem",
+              "id": "account-item",
+              "props": {
+                "headline": "Ana Souza",
+                "supporting": "ana@exemplo.com",
+                "leading": {
+                  "type": "Icon",
+                  "id": "account-icon",
+                  "props": {
+                    "name": "account_circle",
+                    "tint": "primary",
+                    "size": 40
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "Text",
+          "id": "notifications-title",
+          "props": {
+            "text": "Notificações",
+            "style": "titleMedium"
+          },
+          "a11y": {
+            "heading": true
+          }
+        },
+        {
+          "type": "Switch",
+          "id": "notifications",
+          "props": {
+            "checked": {
+              "$state": "notifications"
+            },
+            "label": "Receber notificações"
+          },
+          "events": {
+            "onChange": {
+              "type": "track",
+              "name": "settings_notifications_toggle",
+              "properties": {
+                "enabled": {
+                  "$state": "notifications"
+                }
+              }
+            }
+          },
+          "testTag": "settings.notifications"
+        },
+        {
+          "type": "Checkbox",
+          "id": "newsletter",
+          "props": {
+            "checked": {
+              "$state": "newsletter"
+            },
+            "label": "Quero receber a newsletter por e-mail"
+          }
+        },
+        {
+          "type": "Divider",
+          "id": "divider-1"
+        },
+        {
+          "type": "Text",
+          "id": "email-title",
+          "props": {
+            "text": "Conta",
+            "style": "titleMedium"
+          },
+          "a11y": {
+            "heading": true
+          }
+        },
+        {
+          "type": "TextField",
+          "id": "email",
+          "props": {
+            "value": {
+              "$state": "email"
+            },
+            "label": "E-mail",
+            "supportingText": "Use erro@exemplo.com para ver o erro do BFF",
+            "keyboard": "email",
+            "imeAction": "done",
+            "validation": [
+              {
+                "type": "required",
+                "message": "Informe o e-mail"
+              },
+              {
+                "type": "email",
+                "message": "E-mail inválido"
+              }
+            ]
+          },
+          "events": {
+            "onSubmit": {
+              "type": "validate",
+              "fields": [
+                "email"
+              ],
+              "onValid": {
+                "type": "request",
+                "method": "POST",
+                "endpoint": "/api/profile",
+                "body": {
+                  "email": {
+                    "$state": "email"
+                  },
+                  "notifications": {
+                    "$state": "notifications"
+                  },
+                  "newsletter": {
+                    "$state": "newsletter"
+                  },
+                  "theme": {
+                    "$state": "theme"
+                  }
+                },
+                "loading": "screen",
+                "onSuccess": {
+                  "type": "showSnackbar",
+                  "message": "Configurações salvas"
+                },
+                "onError": {
+                  "type": "showSnackbar",
+                  "message": "Não deu certo. Tente de novo."
+                }
+              }
+            }
+          },
+          "testTag": "settings.email"
+        },
+        {
+          "type": "Text",
+          "id": "theme-title",
+          "props": {
+            "text": "Tema",
+            "style": "titleMedium"
+          },
+          "a11y": {
+            "heading": true
+          }
+        },
+        {
+          "type": "RadioGroup",
+          "id": "theme",
+          "props": {
+            "options": [
+              {
+                "value": "system",
+                "label": "Padrão do sistema"
+              },
+              {
+                "value": "light",
+                "label": "Claro"
+              },
+              {
+                "value": "dark",
+                "label": "Escuro"
+              }
+            ],
+            "selected": {
+              "$state": "theme"
+            }
+          }
+        },
+        {
+          "type": "Button",
+          "id": "save",
+          "props": {
+            "label": "Salvar",
+            "fullWidth": true
+          },
+          "events": {
+            "onClick": {
+              "type": "validate",
+              "fields": [
+                "email"
+              ],
+              "onValid": {
+                "type": "request",
+                "method": "POST",
+                "endpoint": "/api/profile",
+                "body": {
+                  "email": {
+                    "$state": "email"
+                  },
+                  "notifications": {
+                    "$state": "notifications"
+                  },
+                  "newsletter": {
+                    "$state": "newsletter"
+                  },
+                  "theme": {
+                    "$state": "theme"
+                  }
+                },
+                "loading": "screen",
+                "onSuccess": {
+                  "type": "showSnackbar",
+                  "message": "Configurações salvas"
+                },
+                "onError": {
+                  "type": "showSnackbar",
+                  "message": "Não deu certo. Tente de novo."
+                }
+              }
+            }
+          },
+          "testTag": "settings.save",
+          "a11y": {
+            "label": "Salvar configurações"
+          },
+          "analytics": {
+            "name": "settings_save"
+          }
+        },
+        {
+          "type": "Button",
+          "id": "logout",
+          "props": {
+            "label": "Sair da conta",
+            "style": "text",
+            "icon": "exit_to_app",
+            "fullWidth": true
+          },
+          "events": {
+            "onClick": {
+              "type": "openDialog",
+              "id": "logout-dialog"
+            }
+          }
+        }
+      ]
+    },
+    "bottomBar": {
+      "type": "NavigationBar",
+      "id": "nav",
+      "props": {
+        "items": [
+          {
+            "id": "home",
+            "icon": "home",
+            "label": "Início",
+            "route": "home",
+            "testTag": "nav.home"
+          },
+          {
+            "id": "catalog",
+            "icon": "list",
+            "label": "Catálogo",
+            "route": "catalog",
+            "testTag": "nav.catalog"
+          },
+          {
+            "id": "settings",
+            "icon": "settings",
+            "label": "Ajustes",
+            "route": "settings",
+            "testTag": "nav.settings"
+          }
+        ],
+        "selected": "settings"
+      }
+    },
+    "modals": [
+      {
+        "type": "Dialog",
+        "id": "logout-dialog",
+        "props": {
+          "title": "Sair da conta?",
+          "text": "Você vai precisar entrar de novo para ver seus artigos salvos.",
+          "icon": "exit_to_app",
+          "confirm": {
+            "type": "Button",
+            "id": "logout-confirm",
+            "props": {
+              "label": "Sair",
+              "style": "text"
+            },
+            "events": {
+              "onClick": {
+                "type": "request",
+                "method": "POST",
+                "endpoint": "/api/logout",
+                "loading": "screen",
+                "onSuccess": {
+                  "type": "navigate",
+                  "route": "home",
+                  "replace": true
+                }
+              }
+            }
+          },
+          "dismiss": {
+            "type": "Button",
+            "id": "logout-cancel",
+            "props": {
+              "label": "Cancelar",
+              "style": "text"
+            }
+          }
+        },
+        "events": {
+          "onDismiss": {
+            "type": "track",
+            "name": "logout_dialog_dismissed"
+          }
+        }
+      }
+    ],
+    "events": {
+      "onAppear": {
+        "type": "track",
+        "name": "settings_view"
+      }
+    }
+  }
+}

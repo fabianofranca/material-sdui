@@ -1,0 +1,38 @@
+# Gere o projeto do Xcode com XcodeGen (brew install xcodegen):
+#   cd iosApp && xcodegen generate && open iosApp.xcodeproj
+name: iosApp
+options:
+  bundleIdPrefix: com.fabianofranca.sdui
+  deploymentTarget:
+    iOS: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+targets:
+  iosApp:
+    type: application
+    platform: iOS
+    sources:
+      - iosApp
+    info:
+      path: iosApp/Info.plist
+      properties:
+        CFBundleDisplayName: Material SDUI
+        UILaunchScreen: {}
+        # O Compose Multiplatform pede para desenhar acima de 60 Hz nos iPhones com ProMotion.
+        CADisableMinimumFrameDurationOnPhone: true
+        # HTTP sem TLS só para o BFF local, durante o desenvolvimento.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fabianofranca.sdui.ios
+        FRAMEWORK_SEARCH_PATHS: "$(SRCROOT)/../renderer/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
+        OTHER_LDFLAGS: ["-framework", "SduiRenderer"]
+    preBuildScripts:
+      - name: Compilar o renderer (Kotlin)
+        basedOnDependencyAnalysis: false
+        script: |
+          cd "$SRCROOT/.."
+          ./gradlew :renderer:embedAndSignAppleFrameworkForXcode
