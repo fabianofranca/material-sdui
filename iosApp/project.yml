@@ -21,6 +21,8 @@ targets:
       path: iosApp/Info.plist
       properties:
         CFBundleDisplayName: Material SDUI
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         # O Compose Multiplatform pede para desenhar acima de 60 Hz nos iPhones com ProMotion.
         CADisableMinimumFrameDurationOnPhone: true
@@ -30,6 +32,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.fabianofranca.sdui.ios
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
         FRAMEWORK_SEARCH_PATHS: "$(SRCROOT)/../renderer/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
         OTHER_LDFLAGS: ["-framework", "SduiRenderer"]
     preBuildScripts:
