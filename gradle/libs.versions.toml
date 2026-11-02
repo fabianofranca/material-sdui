@@ -6,11 +6,11 @@ compose-multiplatform = "1.12.2"
 compose-material3 = "1.9.0"
 # Os ícones do Compose Multiplatform pararam em 1.7.3 e seguem compatíveis.
 compose-material-icons = "1.7.3"
-agp = "8.13.0"
-android-compileSdk = "36"
-android-targetSdk = "36"
+agp = "9.5.0"
+android-compileSdk = "37"
+android-targetSdk = "37"
 android-minSdk = "24"
-androidx-activity = "1.11.0"
+androidx-activity = "1.13.0"
 kotlinx-serialization = "1.12.0"
 kotlinx-coroutines = "1.11.0"
 ktor = "3.6.1"
@@ -46,9 +46,8 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 android-application = { id = "com.android.application", version.ref = "agp" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

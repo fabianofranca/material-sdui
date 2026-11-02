@@ -78,7 +78,7 @@ O JSON que elas geram está em [`docs/examples/`](docs/examples).
 
 ## Como rodar
 
-Requisitos: JDK 17 ou mais novo. Para o Android, o Android SDK (API 36). Para o iOS, um Mac com Xcode e o [XcodeGen](https://github.com/yonaskolb/XcodeGen).
+Requisitos: JDK 17 ou mais novo. Para o Android, o Android SDK (API 37: `sdkmanager "platforms;android-37.0"`). Para o iOS, um Mac com Xcode e o [XcodeGen](https://github.com/yonaskolb/XcodeGen).
 
 ```bash
 # BFF em http://localhost:8080
@@ -124,7 +124,7 @@ SduiApp(
 | kotlinx.coroutines       | 1.11.0                                                                      |
 | Ktor (cliente e servidor) | 3.6.1                                                                      |
 | Coil                     | 3.6.3                                                                       |
-| Android Gradle Plugin    | 8.13.0 (com Gradle 8.14.6)                                                  |
+| Android Gradle Plugin    | 9.5.0 (com Gradle 9.8.2); `compileSdk`/`targetSdk` 37, `minSdk` 24          |
 | Alvos iOS                | `iosArm64` (aparelho) e `iosSimulatorArm64` (simulador em Mac Apple Silicon) |
 
 Sobre a pergunta em aberto do briefing ("a versão do Compose Multiplatform e a correspondência do `material3` dele com o androidx"): o `material3` do CMP passou a ter versão própria. A estável mais recente é a 1.9.0, que corresponde ao `material3` 1.4.0 do androidx. As 1.10 a 1.13 ainda são alpha/beta.
@@ -145,12 +145,13 @@ O briefing deixou algumas coisas em aberto ou sem forma. A escolha feita em cada
 
 ## O que foi verificado
 
-- `contract`, `engine` e `bff` compilam e os testes passam (32 testes, na JVM): leitura dos exemplos do briefing, compatibilidade com tipos desconhecidos, atalho de lista para `sequence`, ida e volta do JSON, estado e ligações, validação, `request` com carregamento e `RequestResult`, camadas, analytics, cache com `ETag`/`304` e sem rede, todas as telas do BFF válidas (ids únicos, sem tipos desconhecidos) e o catálogo cobrindo todos os componentes.
-- O código do `renderer`, do `androidApp` e do `iosApp` **não foi compilado**: o ambiente em que este código foi escrito não tinha acesso ao Google Maven (`dl.google.com`), de onde vêm o Android Gradle Plugin e os artefatos `androidx` que o Compose usa. Os arquivos Kotlin passaram por um parser (sem erros de sintaxe), mas a checagem de tipos e o teste nos aparelhos ficam para o primeiro build com o Google Maven. O primeiro passo é `./gradlew :androidApp:assembleDebug` e, num Mac, o build do `iosApp`.
+- `contract`, `engine` e `bff` compilam e os testes passam (32 testes, na JVM): leitura dos exemplos do briefing, compatibilidade com tipos desconhecidos, atalho de lista para `sequence`, ida e volta do JSON, estado e ligações, validação, `request` com carregamento e `RequestResult`, camadas, analytics, restauração da tela, cache com `ETag`/`304` e sem rede, todas as telas do BFF válidas (ids únicos, sem tipos desconhecidos) e o catálogo cobrindo todos os componentes.
+- O `renderer` compila para Android e para iOS (`compileKotlinIosSimulatorArm64`), e o `androidApp` gera o APK (`./gradlew :androidApp:assembleDebug`).
+- Ainda não foi feito: rodar o app num aparelho ou emulador, e montar o framework e o app iOS (exige um Mac com Xcode).
 
 ## Próximos passos
 
-1. Compilar e rodar o `renderer` no Android e no iOS (veja acima) e conferir o `catalog` nas duas plataformas.
+1. Rodar os apps num emulador Android e num simulador iOS e conferir o `catalog` nas duas plataformas.
 2. Testes de UI do renderer (Compose UI test com os `testTag`s).
 3. Cache em disco no app (o `ScreenCache` já é uma interface).
 4. A biblioteca `sdui-material3` do Mapping (seção 8 do briefing): um tipo por componente com `sources` nas chaves de `docs/CONTRACT.md`; o `code` da plataforma `app` aponta para o composable em `renderer/.../SduiComponent.kt` (e os arquivos `Layout.kt`, `Content.kt`, `Inputs.kt`, `Navigation.kt`, `Modals.kt`); o da plataforma `bff`, para a função do construtor em `bff/.../dsl/Components.kt` (`button`, `textField`…). Os JSONs de `docs/examples/` servem de origem para trazer telas ao canvas.
