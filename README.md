@@ -99,6 +99,11 @@ curl localhost:8080/screens/settings
 # Saem em renderer/build/outputs/roborazzi/. Com espelho do Maven: -Probolectric.repo=<url>
 ./gradlew :renderer:testAndroidHostTest
 
+# Os mesmos JSONs como @Preview do Compose (androidApp/src/debug), no Android Studio
+# ou no terminal com o Android CLI (https://developer.android.com/cli):
+android preview list androidApp
+android preview render androidApp --fqn=com.fabianofranca.sdui.android.SduiPreviewsKt.HomePreview --output build/previews
+
 # Android (emulador: o BFF fica em 10.0.2.2:8080)
 ./gradlew :androidApp:installDebug
 ./gradlew :androidApp:installDebug -Psdui.bffUrl=http://192.168.0.10:8080   # outro endereço

@@ -32,6 +32,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    sourceSets {
+        // Os JSONs de docs/examples viram assets só no debug, para os @Preview (src/debug).
+        getByName("debug").assets.directories.add(rootProject.file("docs/examples").path)
+    }
+
     packaging {
         resources {
             excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "/META-INF/INDEX.LIST", "/META-INF/io.netty.versions.properties")
@@ -46,4 +51,6 @@ kotlin {
 dependencies {
     implementation(project(":renderer"))
     implementation(libs.androidx.activity.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
