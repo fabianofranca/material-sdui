@@ -106,9 +106,9 @@ curl localhost:8080/screens/settings
 android preview list androidApp
 android preview render androidApp --fqn=com.fabianofranca.sdui.android.SduiPreviewsKt.HomePreview --output build/previews
 
-# Android (emulador: o BFF fica em 10.0.2.2:8080)
+# Android (padrão: o BFF publicado em https://bff.fabianofranca.com)
 ./gradlew :androidApp:installDebug
-./gradlew :androidApp:installDebug -Psdui.bffUrl=http://192.168.0.10:8080   # outro endereço
+./gradlew :androidApp:installDebug -Psdui.bffUrl=http://10.0.2.2:8080       # BFF local, no emulador
 
 # iOS (simulador: o BFF fica em localhost:8080)
 cd iosApp && xcodegen generate && open iosApp.xcodeproj

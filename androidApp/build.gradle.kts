@@ -5,9 +5,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-// O endereço do BFF. No emulador, 10.0.2.2 é o localhost do computador.
-// Para outro endereço: ./gradlew :androidApp:installDebug -Psdui.bffUrl=http://192.168.0.10:8080
-val bffUrl = providers.gradleProperty("sdui.bffUrl").orElse("http://10.0.2.2:8080").get()
+// O endereço do BFF. Padrão: o BFF publicado (deploy/lightsail).
+// Para o BFF local no emulador (10.0.2.2 é o localhost do computador):
+//   ./gradlew :androidApp:installDebug -Psdui.bffUrl=http://10.0.2.2:8080
+val bffUrl = providers.gradleProperty("sdui.bffUrl").orElse("https://bff.fabianofranca.com").get()
 
 android {
     namespace = "com.fabianofranca.sdui.android"
