@@ -86,6 +86,72 @@ curl.exe https://bff.seudominio.com/screens/home
 - Android: `.\gradlew.bat :androidApp:installDebug -Psdui.bffUrl=https://bff.seudominio.com`
 - iOS: troque `baseUrl` em `iosApp/iosApp/ContentView.swift`.
 
+## Se as portas 80 e 443 já têm outro serviço
+
+O Caddy precisa das duas portas. Se já existe um servidor web na instância, use esse servidor como proxy para o BFF.
+
+1. Veja quem usa as portas (e se a 8080 está livre):
+
+   ```bash
+   sudo ss -ltnp | grep -E ':(80|443|8080) '
+   ```
+
+2. Instale o BFF **sem o domínio** (não instala o Caddy). Se a 8080 estiver ocupada, troque a porta:
+
+   ```bash
+   sudo BFF_PORT=8080 bash install.sh bff-0.1.0.zip
+   ```
+
+3. Configure o servidor que já está lá.
+
+### nginx
+
+Crie `/etc/nginx/sites-available/bff` (troque o domínio e, se mudou, a porta):
+
+```nginx
+server {
+    listen 80;
+    server_name bff.seudominio.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Ative, confira e peça o certificado (o certbot acrescenta o HTTPS nesse mesmo arquivo):
+
+```bash
+sudo ln -s /etc/nginx/sites-available/bff /etc/nginx/sites-enabled/bff
+sudo nginx -t && sudo systemctl reload nginx
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d bff.seudominio.com
+```
+
+### Apache
+
+```bash
+sudo a2enmod proxy proxy_http headers
+sudo tee /etc/apache2/sites-available/bff.conf > /dev/null <<'CONF'
+<VirtualHost *:80>
+    ServerName bff.seudominio.com
+    ProxyPreserveHost On
+    ProxyPass / http://127.0.0.1:8080/
+    ProxyPassReverse / http://127.0.0.1:8080/
+</VirtualHost>
+CONF
+sudo a2ensite bff && sudo apachectl configtest && sudo systemctl reload apache2
+sudo apt install -y certbot python3-certbot-apache
+sudo certbot --apache -d bff.seudominio.com
+```
+
+### Outro serviço (Docker, Traefik, outro Caddy, Bitnami…)
+
+Acrescente ao proxy que já existe uma rota para `bff.seudominio.com` apontando para `http://127.0.0.1:8080`, com HTTPS. Se o proxy roda dentro de um container Docker, `127.0.0.1` é o próprio container: use o IP privado da instância e, no `install.sh`, troque `HOST=127.0.0.1` por esse IP.
+
 ## Atualizar
 
 Gere o zip de novo, envie (passo 6) e rode o mesmo `sudo bash install.sh ...`. A versão anterior fica em `/opt/bff.old`.

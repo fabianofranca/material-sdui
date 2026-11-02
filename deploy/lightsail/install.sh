@@ -3,6 +3,11 @@
 #
 #   sudo bash install.sh bff-0.1.0.zip bff.seudominio.com
 #
+# Se as portas 80/443 já são de outro serviço (nginx, Apache...), rode sem o domínio e
+# configure esse serviço como proxy (veja deploy/lightsail/README.md):
+#
+#   sudo BFF_PORT=8080 bash install.sh bff-0.1.0.zip
+#
 # - instala o Java 21 (JRE) e, com domínio, o Caddy (HTTPS automático, Let's Encrypt);
 # - põe o BFF em /opt/bff, rodando como o usuário de sistema "bff" num serviço do systemd;
 # - o BFF escuta só em 127.0.0.1:8080; quem fica exposto é o Caddy, nas portas 80 e 443.
@@ -12,11 +17,26 @@ set -euo pipefail
 
 ZIP="${1:?Uso: sudo bash install.sh <bff-x.y.z.zip> [domínio]}"
 DOMAIN="${2:-}"
-PORT=8080
+PORT="${BFF_PORT:-8080}"
 
 [ "$(id -u)" = "0" ] || { echo "Rode com sudo."; exit 1; }
 [ -f "$ZIP" ] || { echo "Não achei $ZIP."; exit 1; }
 log() { echo; echo "==> $*"; }
+
+# Outro serviço nas portas 80/443 impede o Caddy; melhor parar antes de mexer em algo.
+if [ -n "$DOMAIN" ]; then
+    others="$(ss -ltnpH '( sport = :80 or sport = :443 )' 2>/dev/null | grep -v '"caddy"' || true)"
+    if [ -n "$others" ]; then
+        echo "As portas 80/443 já estão em uso por outro serviço:"
+        echo "$others"
+        echo "Rode sem o domínio e configure esse serviço como proxy (deploy/lightsail/README.md)."
+        exit 1
+    fi
+fi
+if ss -ltnpH "( sport = :$PORT )" 2>/dev/null | grep -qv '"java"'; then
+    echo "A porta $PORT já está em uso. Escolha outra: sudo BFF_PORT=8081 bash install.sh ..."
+    exit 1
+fi
 
 log "Instalando Java 21 e unzip"
 export DEBIAN_FRONTEND=noninteractive
