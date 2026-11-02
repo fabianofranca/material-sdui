@@ -18,6 +18,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.key
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fabianofranca.sdui.contract.Component
 import com.fabianofranca.sdui.contract.Trigger
+import com.fabianofranca.sdui.engine.boolean
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,11 +40,16 @@ internal fun SduiColumn(c: Component.Column, modifier: Modifier) {
     val p = c.props
     val scroll = if (p.scroll) Modifier.verticalScroll(rememberScrollState()) else Modifier
     Column(
-        modifier = modifier.fillMaxWidth().sduiClickable(c).then(scroll).padding(p.padding.toPaddingValues()),
+        modifier = modifier.then(fillWidth()).sduiClickable(c).then(scroll).padding(p.padding.toPaddingValues()),
         verticalArrangement = Arrangement.spacedBy(p.spacing.dp),
         horizontalAlignment = p.horizontalAlignment.toCompose(),
     ) {
-        SduiChildren(c)
+        CompositionLocalProvider(
+            LocalFillWidth provides true,
+            LocalInVerticalScroll provides (p.scroll || LocalInVerticalScroll.current),
+        ) {
+            SduiChildren(c)
+        }
     }
 }
 
@@ -49,22 +57,27 @@ internal fun SduiColumn(c: Component.Column, modifier: Modifier) {
 @Composable
 internal fun SduiRow(c: Component.Row, modifier: Modifier) {
     val p = c.props
-    val m = modifier.fillMaxWidth().sduiClickable(c).padding(p.padding.toPaddingValues())
-    if (p.wrap) {
-        FlowRow(
-            modifier = m,
-            horizontalArrangement = p.horizontalArrangement.toCompose(p.spacing),
-            verticalArrangement = Arrangement.spacedBy(p.spacing.dp),
-        ) {
-            SduiChildren(c)
-        }
-    } else {
-        Row(
-            modifier = m,
-            horizontalArrangement = p.horizontalArrangement.toCompose(p.spacing),
-            verticalAlignment = p.verticalAlignment.toCompose(),
-        ) {
-            SduiChildren(c)
+    val m = modifier.then(fillWidth()).sduiClickable(c).padding(p.padding.toPaddingValues())
+    CompositionLocalProvider(LocalFillWidth provides false) {
+        if (p.wrap) {
+            FlowRow(
+                modifier = m,
+                horizontalArrangement = p.horizontalArrangement.toCompose(p.spacing),
+                verticalArrangement = Arrangement.spacedBy(p.spacing.dp),
+            ) {
+                SduiChildren(c)
+            }
+        } else {
+            Row(
+                modifier = m,
+                horizontalArrangement = p.horizontalArrangement.toCompose(p.spacing),
+                verticalAlignment = p.verticalAlignment.toCompose(),
+            ) {
+                // Quem quer a largura divide o espaço que sobra, em vez de empurrar os vizinhos para fora.
+                for (child in childrenOf(c)) {
+                    key(child.id) { SduiComponent(child, if (child.fillsWidth()) Modifier.weight(1f) else Modifier) }
+                }
+            }
         }
     }
 }
@@ -88,8 +101,17 @@ internal fun SduiLazyColumn(c: Component.LazyColumn, modifier: Modifier) {
     val controller = LocalSduiController.current
     val ui = LocalSduiUi.current
     val p = c.props
-    // Ids repetidos quebram a LazyColumn (chaves duplicadas); o primeiro vence.
+    if (LocalInVerticalScroll.current) {
+        // Uma lista preguiçosa dentro de uma Column que já rola quebra (altura infinita).
+        LaunchedEffect(c.id) { controller.host.logger.warn("LazyColumn ${c.id} dentro de Column com scroll: desenhada como Column") }
+        Column(modifier.then(fillWidth()).padding(p.padding.toPaddingValues()), verticalArrangement = Arrangement.spacedBy(p.spacing.dp)) {
+            SduiChildren(c)
+        }
+        return
+    }
+    // Ids repetidos quebram a LazyColumn (chaves duplicadas); o primeiro vence. Invisíveis não ocupam lugar.
     val children = childrenOf(c).distinctBy { it.id }
+        .filter { it !is Component.Unknown && controller.store.boolean(it.visible) }
     val listState = rememberLazyListState()
     val loadingMore = c.id in ui.loading
 

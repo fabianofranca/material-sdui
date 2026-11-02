@@ -16,6 +16,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import com.fabianofranca.sdui.contract.Trigger
 import com.fabianofranca.sdui.engine.ScreenController
 import com.fabianofranca.sdui.engine.SduiHost
 import com.fabianofranca.sdui.engine.StateStore
+import com.fabianofranca.sdui.engine.UiState
 
 /**
  * Desenha uma tela do SDUI: `topBar`, `content`, `bottomBar` e `floating` num [Scaffold] do
@@ -41,6 +43,8 @@ import com.fabianofranca.sdui.engine.StateStore
  *
  * @param store o estado da tela; passe um que sobreviva à tela para manter o que a pessoa digitou.
  * @param onRefresh o que a ação `refreshScreen` faz (pedir a tela de novo).
+ * @param restoreUi o [UiState] guardado por [onLeave] na última vez (itens acrescentados e erros).
+ * @param onLeave chamado quando a tela sai da composição, com o [UiState] dela.
  */
 @Composable
 fun SduiScreen(
@@ -50,11 +54,17 @@ fun SduiScreen(
     store: StateStore = remember(screen) { SnapshotStateStore(screen.state) },
     icons: SduiIcons = SduiIcons.Default,
     onRefresh: suspend () -> Unit = {},
+    restoreUi: UiState? = null,
+    onLeave: (UiState) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val currentOnRefresh by rememberUpdatedState(onRefresh)
+    val currentOnLeave by rememberUpdatedState(onLeave)
     val controller = remember(screen, store, host) {
-        ScreenController(screen, host, store, scope, refreshScreen = { currentOnRefresh() })
+        ScreenController(screen, host, store, scope, refreshScreen = { currentOnRefresh() }, restore = restoreUi)
+    }
+    DisposableEffect(controller) {
+        onDispose { currentOnLeave(controller.ui.value) }
     }
     val ui by controller.ui.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }

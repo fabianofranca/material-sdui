@@ -252,6 +252,7 @@ class ScreenControllerTest {
         val card = Component.Card("promo", analytics = AnalyticsInfo("promo_card"))
         val f = Fixture(screenWith(card), this)
         f.controller.onAppear(card)
+        f.controller.onAppear(card)
         f.controller.dispatch(Trigger.OnClick, card)
         assertEquals(
             listOf(AnalyticsEvent.Kind.Impression, AnalyticsEvent.Kind.Click),
@@ -278,6 +279,28 @@ class ScreenControllerTest {
         advanceUntilIdle()
         assertEquals(JsonPrimitive("settings"), f.controller.fieldValue(bar))
         assertEquals(listOf("navigate:/settings:{}:true"), f.navigator.calls)
+    }
+
+    @Test
+    fun restauraItensAcrescentadosEErros() = runTest {
+        val screen = screenWith(email)
+        val first = Fixture(screen, this)
+        first.controller.validate(listOf("email"))
+        val restored = ScreenController(
+            screen = screen,
+            host = SduiHost(FakeNavigator(), { HttpOutcome(200) }),
+            scope = this,
+            restore = first.controller.ui.value.copy(
+                appended = mapOf("content" to listOf(Component.Text("novo"))),
+                openModals = listOf("x"),
+                screenLoading = 1,
+            ),
+        )
+        assertEquals("Informe o e-mail", restored.ui.value.errors["email"])
+        assertEquals(listOf("novo"), restored.ui.value.appended["content"]?.map { it.id })
+        assertEquals(0, restored.ui.value.screenLoading)
+        assertEquals(emptyList(), restored.ui.value.openModals)
+        assertTrue(restored.component("novo") != null)
     }
 
     @Test

@@ -108,7 +108,9 @@ Props _ligáveis_ estão com `*`. Tamanhos e espaços são em dp. Cores e tipogr
 
 Detalhes:
 
-- `Column`, `Row`, `LazyColumn`, `Card`, `TextField`, `Checkbox`/`Switch`/`RadioGroup` com rótulo e `ProgressIndicator` linear ocupam a largura disponível.
+- `Column`, `Row`, `LazyColumn`, `Card`, `TextField`, `Checkbox`/`Switch`/`RadioGroup` com rótulo, `ProgressIndicator` linear, `Button` com `fullWidth`, `Image` com `aspectRatio` e `Text` com `align` ocupam a largura disponível. Dentro de uma `Row`, eles dividem o espaço que sobra depois dos vizinhos.
+- Uma `LazyColumn` dentro de uma `Column` com `scroll` é desenhada como `Column` (duas rolagens na mesma direção quebram).
+- `onAppear` e a impressão de `analytics` valem uma vez por componente enquanto a tela existir (rolar a lista não repete). Ao voltar para uma tela, ela reaparece com o estado, as páginas carregadas, os erros e a posição das listas.
 - `padding` é um número (os quatro lados) ou `{ "all", "horizontal", "vertical", "start", "top", "end", "bottom" }`.
 - Item da `NavigationBar` sem `onClick` navega para `route` trocando a tela atual (`replace`).
 - Tocar em `confirm` ou `dismiss` do `Dialog` fecha o Dialog e depois executa o `onClick` do botão.

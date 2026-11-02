@@ -125,6 +125,7 @@ SduiApp(
 | Ktor (cliente e servidor) | 3.6.1                                                                      |
 | Coil                     | 3.6.3                                                                       |
 | Android Gradle Plugin    | 8.13.0 (com Gradle 8.14.6)                                                  |
+| Alvos iOS                | `iosArm64` (aparelho) e `iosSimulatorArm64` (simulador em Mac Apple Silicon) |
 
 Sobre a pergunta em aberto do briefing ("a versão do Compose Multiplatform e a correspondência do `material3` dele com o androidx"): o `material3` do CMP passou a ter versão própria. A estável mais recente é a 1.9.0, que corresponde ao `material3` 1.4.0 do androidx. As 1.10 a 1.13 ainda são alpha/beta.
 
@@ -144,7 +145,7 @@ O briefing deixou algumas coisas em aberto ou sem forma. A escolha feita em cada
 
 ## O que foi verificado
 
-- `contract`, `engine` e `bff` compilam e os testes passam (31 testes, na JVM): leitura dos exemplos do briefing, compatibilidade com tipos desconhecidos, atalho de lista para `sequence`, ida e volta do JSON, estado e ligações, validação, `request` com carregamento e `RequestResult`, camadas, analytics, cache com `ETag`/`304` e sem rede, todas as telas do BFF válidas (ids únicos, sem tipos desconhecidos) e o catálogo cobrindo todos os componentes.
+- `contract`, `engine` e `bff` compilam e os testes passam (32 testes, na JVM): leitura dos exemplos do briefing, compatibilidade com tipos desconhecidos, atalho de lista para `sequence`, ida e volta do JSON, estado e ligações, validação, `request` com carregamento e `RequestResult`, camadas, analytics, cache com `ETag`/`304` e sem rede, todas as telas do BFF válidas (ids únicos, sem tipos desconhecidos) e o catálogo cobrindo todos os componentes.
 - O código do `renderer`, do `androidApp` e do `iosApp` **não foi compilado**: o ambiente em que este código foi escrito não tinha acesso ao Google Maven (`dl.google.com`), de onde vêm o Android Gradle Plugin e os artefatos `androidx` que o Compose usa. Os arquivos Kotlin passaram por um parser (sem erros de sintaxe), mas a checagem de tipos e o teste nos aparelhos ficam para o primeiro build com o Google Maven. O primeiro passo é `./gradlew :androidApp:assembleDebug` e, num Mac, o build do `iosApp`.
 
 ## Próximos passos

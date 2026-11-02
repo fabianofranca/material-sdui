@@ -76,7 +76,7 @@ internal fun SduiButton(c: Component.Button, modifier: Modifier) {
     val enabled = store.boolean(p.enabled, default = true) && !loading
     val icon = p.icon?.let(LocalSduiIcons.current::resolve)
     val onClick: () -> Unit = { controller.dispatch(Trigger.OnClick, Trigger.OnSubmit, component = c) }
-    val m = if (p.fullWidth) modifier.fillMaxWidth() else modifier
+    val m = if (p.fullWidth) modifier.then(fillWidth()) else modifier
     val content: @Composable RowScope.() -> Unit = {
         if (loading) {
             CircularProgressIndicator(
@@ -167,7 +167,7 @@ internal fun SduiTextField(c: Component.TextField, modifier: Modifier) {
     val label = textSlot(p.label?.let { store.string(it) })
     val placeholder = textSlot(p.placeholder?.let { store.string(it) })
     val supportingText = textSlot(supporting)
-    val m = modifier.fillMaxWidth()
+    val m = modifier.then(fillWidth())
 
     when (p.style) {
         TextFieldStyle.Filled -> TextField(
@@ -213,7 +213,7 @@ internal fun SduiCheckbox(c: Component.Checkbox, modifier: Modifier) {
         Checkbox(checked = checked, onCheckedChange = onChange, modifier = modifier, enabled = enabled)
         return
     }
-    Column(modifier.fillMaxWidth()) {
+    Column(modifier.then(fillWidth())) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -242,7 +242,7 @@ internal fun SduiSwitch(c: Component.Switch, modifier: Modifier) {
     }
     Row(
         modifier = modifier
-            .fillMaxWidth()
+            .then(fillWidth())
             .toggleable(value = checked, enabled = enabled, role = Role.Switch, onValueChange = onChange)
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -259,7 +259,7 @@ internal fun SduiRadioGroup(c: Component.RadioGroup, modifier: Modifier) {
     val p = c.props
     val selected = controller.fieldValue(c)?.asText()
     val enabled = controller.store.boolean(p.enabled, default = true)
-    Column(modifier.fillMaxWidth().selectableGroup()) {
+    Column(modifier.then(fillWidth()).selectableGroup()) {
         for (option in p.options) {
             val isSelected = option.value == selected
             val optionEnabled = enabled && option.enabled

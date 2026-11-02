@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,7 +47,7 @@ internal fun SduiText(c: Component.Text, modifier: Modifier) {
     val maxLines = p.maxLines
     Text(
         text = store.string(p.text),
-        modifier = (if (align != null) modifier.fillMaxWidth() else modifier).sduiClickable(c),
+        modifier = (if (align != null) modifier.then(fillWidth()) else modifier).sduiClickable(c),
         style = p.style.toTextStyle(),
         color = p.color?.toColor() ?: Color.Unspecified,
         maxLines = maxLines ?: Int.MAX_VALUE,
@@ -70,7 +71,7 @@ internal fun SduiImage(c: Component.Image, modifier: Modifier) {
     val aspectRatio = p.aspectRatio
     val sized = when {
         size != null -> Modifier.size(size.dp)
-        aspectRatio != null -> Modifier.fillMaxWidth().aspectRatio(aspectRatio)
+        aspectRatio != null -> fillWidth().aspectRatio(aspectRatio)
         else -> Modifier
     }
     AsyncImage(
@@ -110,13 +111,13 @@ internal fun MissingIcon(name: String) {
 internal fun SduiCard(c: Component.Card, modifier: Modifier) {
     val controller = LocalSduiController.current
     val p = c.props
-    val m = modifier.fillMaxWidth()
+    val m = modifier.then(fillWidth())
     val body: @Composable ColumnScope.() -> Unit = {
         Column(
             modifier = Modifier.fillMaxWidth().padding(p.padding.toPaddingValues()),
             verticalArrangement = Arrangement.spacedBy(p.spacing.dp),
         ) {
-            SduiChildren(c)
+            CompositionLocalProvider(LocalFillWidth provides true) { SduiChildren(c) }
         }
     }
     if (Trigger.OnClick in c.events) {
@@ -176,9 +177,9 @@ internal fun SduiProgressIndicator(c: Component.ProgressIndicator, modifier: Mod
     val progress = LocalSduiController.current.store.float(c.props.progress)?.coerceIn(0f, 1f)
     when (c.props.kind) {
         ProgressKind.Linear -> if (progress != null) {
-            LinearProgressIndicator(progress = { progress }, modifier = modifier.fillMaxWidth())
+            LinearProgressIndicator(progress = { progress }, modifier = modifier.then(fillWidth()))
         } else {
-            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+            LinearProgressIndicator(modifier = modifier.then(fillWidth()))
         }
         ProgressKind.Circular -> if (progress != null) {
             CircularProgressIndicator(progress = { progress }, modifier = modifier)

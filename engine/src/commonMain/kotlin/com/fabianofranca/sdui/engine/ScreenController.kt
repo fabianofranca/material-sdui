@@ -67,8 +67,13 @@ class ScreenController(
     /** Pede a tela de novo ao BFF (ação `refreshScreen`). */
     private val refreshScreen: suspend () -> Unit = {},
     private val json: Json = SduiJson,
+    /**
+     * O que restaurar ao voltar para a tela: itens acrescentados e erros. Camadas abertas e
+     * carregamentos não voltam (a requisição que os mantinha não existe mais).
+     */
+    restore: UiState? = null,
 ) {
-    private val _ui = MutableStateFlow(UiState())
+    private val _ui = MutableStateFlow(UiState(errors = restore?.errors.orEmpty(), appended = restore?.appended.orEmpty()))
     val ui: StateFlow<UiState> = _ui.asStateFlow()
 
     private val snackbarChannel = Channel<SnackbarRequest>(Channel.BUFFERED)
@@ -77,8 +82,11 @@ class ScreenController(
     private val index = mutableMapOf<String, Component>()
     private val dialogOfButton = mutableMapOf<String, String>()
 
+    private val appeared = mutableSetOf<String>()
+
     init {
         register(screen.allComponents())
+        _ui.value.appended.values.forEach { children -> register(children.asSequence().flatMap { it.descendantsAndSelf() }) }
     }
 
     fun component(id: String): Component? = index[id]
@@ -154,8 +162,12 @@ class ScreenController(
         execute(action, component?.id)
     }
 
-    /** O componente apareceu: impressão de analytics e `onAppear`. */
+    /**
+     * O componente apareceu: impressão de analytics e `onAppear`. Vale uma vez por componente
+     * enquanto a tela existir (rolar a lista para trás e para frente não repete).
+     */
     fun onAppear(component: Component) {
+        if (!appeared.add(component.id)) return
         component.analytics?.let { track(it.name, AnalyticsEvent.Kind.Impression, component.id, it.properties) }
         dispatch(Trigger.OnAppear, component)
     }
