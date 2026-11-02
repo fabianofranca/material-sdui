@@ -4,6 +4,13 @@ Server-Driven UI com Material 3 em Kotlin Multiplatform. O BFF descreve cada tel
 
 O contrato (o formato do JSON) é um só e está em Kotlin: o BFF serializa com ele e os apps desserializam com ele. A referência completa está em [`docs/CONTRACT.md`](docs/CONTRACT.md).
 
+<p>
+  <img src="docs/screenshots/home.png" width="200" alt="Início">
+  <img src="docs/screenshots/settings.png" width="200" alt="Configurações">
+  <img src="docs/screenshots/catalog-actions.png" width="200" alt="Catálogo: ações">
+  <img src="docs/screenshots/settings-dark.png" width="200" alt="Configurações no tema escuro">
+</p>
+
 ## Módulos
 
 ```
@@ -88,6 +95,10 @@ curl localhost:8080/screens/settings
 # Testes do contrato, do motor e do BFF
 ./gradlew :contract:jvmTest :engine:jvmTest :bff:test
 
+# Capturas das telas de docs/examples, sem aparelho (Robolectric + Roborazzi)
+# Saem em renderer/build/outputs/roborazzi/. Com espelho do Maven: -Probolectric.repo=<url>
+./gradlew :renderer:testAndroidHostTest
+
 # Android (emulador: o BFF fica em 10.0.2.2:8080)
 ./gradlew :androidApp:installDebug
 ./gradlew :androidApp:installDebug -Psdui.bffUrl=http://192.168.0.10:8080   # outro endereço
@@ -147,6 +158,7 @@ O briefing deixou algumas coisas em aberto ou sem forma. A escolha feita em cada
 
 - `contract`, `engine` e `bff` compilam e os testes passam (32 testes, na JVM): leitura dos exemplos do briefing, compatibilidade com tipos desconhecidos, atalho de lista para `sequence`, ida e volta do JSON, estado e ligações, validação, `request` com carregamento e `RequestResult`, camadas, analytics, restauração da tela, cache com `ETag`/`304` e sem rede, todas as telas do BFF válidas (ids únicos, sem tipos desconhecidos) e o catálogo cobrindo todos os componentes.
 - O `renderer` compila para Android e para iOS (`compileKotlinIosSimulatorArm64`), e o `androidApp` gera o APK (`./gradlew :androidApp:assembleDebug`).
+- O renderer desenha as telas reais do BFF: os testes de captura (Robolectric + Roborazzi) geram as imagens de [`docs/screenshots/`](docs/screenshots) a partir de `docs/examples/`. As imagens da internet aparecem como o fundo de espera, porque o teste não tem rede.
 - Ainda não foi feito: rodar o app num aparelho ou emulador, e montar o framework e o app iOS (exige um Mac com Xcode).
 
 ## Próximos passos
