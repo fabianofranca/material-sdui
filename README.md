@@ -85,6 +85,8 @@ O JSON que elas geram está em [`docs/examples/`](docs/examples).
 
 ## Como rodar
 
+Numa máquina Linux nova (ambiente cloud, CI), `bash scripts/setup-cloud-env.sh` instala o Android SDK e o Android CLI e configura um espelho do Maven Central. Veja o [`CLAUDE.md`](CLAUDE.md) para os comandos do dia a dia.
+
 Requisitos: JDK 17 ou mais novo. Para o Android, o Android SDK (API 37: `sdkmanager "platforms;android-37.0"`). Para o iOS, um Mac com Xcode e o [XcodeGen](https://github.com/yonaskolb/XcodeGen).
 
 ```bash
