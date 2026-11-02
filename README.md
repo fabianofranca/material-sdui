@@ -90,7 +90,7 @@ Numa máquina Linux nova (ambiente cloud, CI), `bash scripts/setup-cloud-env.sh`
 Requisitos: JDK 17 ou mais novo. Para o Android, o Android SDK (API 37: `sdkmanager "platforms;android-37.0"`). Para o iOS, um Mac com Xcode e o [XcodeGen](https://github.com/yonaskolb/XcodeGen).
 
 ```bash
-# BFF em http://localhost:8080
+# BFF em http://localhost:8080 (no servidor: deploy/lightsail/README.md)
 ./gradlew :bff:run
 curl localhost:8080/screens/settings
 

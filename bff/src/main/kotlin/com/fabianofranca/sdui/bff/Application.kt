@@ -38,9 +38,11 @@ import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import java.security.MessageDigest
 
+/** `PORT` (padrão 8080) e `HOST` (padrão 0.0.0.0; atrás de um proxy, use 127.0.0.1). */
 fun main() {
     val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
-    embeddedServer(Netty, port = port, host = "0.0.0.0") { module() }.start(wait = true)
+    val host = System.getenv("HOST") ?: "0.0.0.0"
+    embeddedServer(Netty, port = port, host = host) { module() }.start(wait = true)
 }
 
 /** As telas que este BFF sabe montar, por rota. */
