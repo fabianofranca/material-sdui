@@ -72,6 +72,8 @@ sudo bash install.sh bff-0.1.0.zip bff.seudominio.com
 
 O script instala o Java 21 e o Caddy, põe o BFF em `/opt/bff` como serviço (`bff`) e configura o HTTPS. Na primeira vez, leva uns 2 minutos.
 
+Se o Caddy já existe na instância servindo outros sites, o script não troca o `Caddyfile`: guarda uma cópia (`/etc/caddy/Caddyfile.bak-<data>`), acrescenta só o bloco do BFF, valida e recarrega o Caddy. Em instâncias com menos de 2 GB sem swap, ele também cria 1 GB de swap.
+
 ## 8. Testar
 
 Da sua máquina:
