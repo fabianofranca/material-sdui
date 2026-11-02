@@ -7,14 +7,17 @@ Casca fina em SwiftUI que embute o renderer (`SduiRenderer.framework`, gerado pe
 
 ## Sem Mac: GitHub Actions
 
-O workflow [`.github/workflows/ios.yml`](../.github/workflows/ios.yml) roda num macOS do GitHub a cada push no branch e também manualmente (**Actions → iOS → Run workflow**). Ele publica estes artefatos na página da execução:
+O workflow [`.github/workflows/ios.yml`](../.github/workflows/ios.yml) roda num macOS do GitHub:
 
-| Artefato             | O que é                                                                    |
-| -------------------- | -------------------------------------------------------------------------- |
-| `ios-screenshots`    | Capturas do app no Simulador (início, catálogo, ajustes; claro e escuro).  |
-| `iosApp-simulator`   | O `.app` para Simulador.                                                   |
-| `iosApp-device-ipa`  | O `.ipa` para iPhone, **sem assinatura** (para o Sideloadly).              |
-| `xcodebuild-log`     | Os logs do `xcodebuild`, para investigar falhas.                           |
+- **a cada push no branch:** compila para iPhone (Release, sem assinatura) e publica o `.ipa`;
+- **manualmente** (**Actions → iOS → Run workflow**): o mesmo, mais as opções **simulator** (roda o app no Simulador e tira capturas) e **testflight** (veja abaixo).
+
+| Artefato                  | O que é                                                                   | Quando              |
+| ------------------------- | ------------------------------------------------------------------------- | ------------------- |
+| `iosApp-device-ipa`       | O `.ipa` para iPhone, **sem assinatura** (para o Sideloadly).             | sempre              |
+| `xcodebuild-device-log`   | O log do build para aparelho.                                             | sempre              |
+| `ios-screenshots`         | Capturas no Simulador (início, catálogo, ajustes; claro e escuro).        | opção **simulator** |
+| `iosApp-simulator`        | O `.app` para Simulador.                                                  | opção **simulator** |
 
 ## Instalar no iPhone com o Sideloadly (Windows, Apple ID gratuito)
 

@@ -1,9 +1,12 @@
-# App iOS no GitHub Actions (macOS), sem conta paga da Apple:
-#   - Simulador: compila (Debug), roda, tira capturas -> artefatos ios-screenshots, iosApp-simulator;
-#   - aparelho: compila (Release, iosArm64) sem assinatura e empacota um .ipa -> iosApp-device-ipa
-#     (para assinar e instalar com o Sideloadly e um Apple ID gratuito; veja iosApp/README.md).
-# O job "testflight" fica pronto para quando houver conta paga: roda só manualmente, com a
-# opção testflight marcada e os segredos configurados (veja iosApp/README.md).
+# App iOS no GitHub Actions (macOS), sem conta paga da Apple.
+#
+#   device      (a cada push e manual) compila para iPhone (Release, iosArm64) sem assinatura e
+#               publica o .ipa -> artefato iosApp-device-ipa (assinar e instalar com o Sideloadly
+#               e um Apple ID gratuito; veja iosApp/README.md).
+#   simulator   (manual, opção "simulator") compila para o Simulador, roda o app e tira capturas
+#               -> artefatos ios-screenshots e iosApp-simulator.
+#   testflight  (manual, opção "testflight") assina e envia ao TestFlight; precisa da conta paga
+#               e dos segredos (veja iosApp/README.md).
 name: iOS
 
 on:
@@ -11,6 +14,10 @@ on:
     branches: [ccr-39509bf5-h1xt7c]
   workflow_dispatch:
     inputs:
+      simulator:
+        description: "Também rodar no Simulador e tirar capturas"
+        type: boolean
+        default: false
       testflight:
         description: "Assinar e enviar ao TestFlight (precisa da conta paga e dos segredos)"
         type: boolean
@@ -21,12 +28,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  simulator:
+  device:
     runs-on: macos-latest
     timeout-minutes: 60
     env:
-      BUNDLE_ID: com.fabianofranca.sdui.ios
-      APP_PATH: build/ios/Build/Products/Debug-iphonesimulator/iosApp.app
+      APP_PATH: build/ios-device/Build/Products/Release-iphoneos/iosApp.app
     steps:
       - uses: actions/checkout@v4
 
@@ -54,10 +60,89 @@ jobs:
           brew install xcodegen
           cd iosApp && xcodegen generate
 
-      - name: Compilar para o Simulador
+      - name: Compilar para aparelho (Release, sem assinatura)
         run: |
           mkdir -p build
           # O passo de build do projeto chama ./gradlew :renderer:embedAndSignAppleFrameworkForXcode.
+          if ! xcodebuild \
+              -project iosApp/iosApp.xcodeproj \
+              -scheme iosApp \
+              -configuration Release \
+              -sdk iphoneos \
+              -destination 'generic/platform=iOS' \
+              -derivedDataPath build/ios-device \
+              ARCHS=arm64 ONLY_ACTIVE_ARCH=NO \
+              CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+              build > build/xcodebuild-device.log 2>&1; then
+            echo "::group::Erros"
+            grep -nE "error:|e: |FAILURE|What went wrong" build/xcodebuild-device.log | head -n 80 || true
+            echo "::endgroup::"
+            tail -n 120 build/xcodebuild-device.log
+            exit 1
+          fi
+          tail -n 5 build/xcodebuild-device.log
+
+      - name: Conferir que o binário é de aparelho (iosArm64)
+        run: |
+          echo "Tarefas do Kotlin/Native no build:"
+          grep -oE ":renderer:[A-Za-z]*Ios(Simulator)?Arm64[A-Za-z]*" build/xcodebuild-device.log | sort -u
+          grep -qE ":renderer:link[A-Za-z]*FrameworkIosArm64" build/xcodebuild-device.log \
+            || { echo "O framework Kotlin não foi gerado para iosArm64"; exit 1; }
+          echo "Arquiteturas: $(lipo -archs "$APP_PATH/iosApp")"
+          xcrun vtool -show-build "$APP_PATH/iosApp" | tee build/vtool.txt
+          [ "$(lipo -archs "$APP_PATH/iosApp")" = "arm64" ] || { echo "Esperava só arm64"; exit 1; }
+          grep -qE "platform IOS$" build/vtool.txt || { echo "Esperava a plataforma IOS (aparelho)"; exit 1; }
+
+      - name: Empacotar o .ipa (sem assinatura)
+        run: |
+          rm -rf build/Payload && mkdir -p build/Payload
+          cp -R "$APP_PATH" build/Payload/
+          (cd build && zip -qry iosApp-unsigned.ipa Payload)
+          ls -la build/iosApp-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iosApp-device-ipa
+          path: build/iosApp-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xcodebuild-device-log
+          path: build/xcodebuild-device.log
+          if-no-files-found: ignore
+
+  simulator:
+    if: github.event_name == 'workflow_dispatch' && inputs.simulator
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      BUNDLE_ID: com.fabianofranca.sdui.ios
+      APP_PATH: build/ios/Build/Products/Debug-iphonesimulator/iosApp.app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Cache do Kotlin/Native
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('gradle/libs.versions.toml') }}
+
+      - name: Gerar o projeto do Xcode (XcodeGen)
+        run: |
+          brew install xcodegen
+          cd iosApp && xcodegen generate
+
+      - name: Compilar para o Simulador
+        run: |
+          mkdir -p build
           if ! xcodebuild \
               -project iosApp/iosApp.xcodeproj \
               -scheme iosApp \
@@ -75,7 +160,6 @@ jobs:
             exit 1
           fi
           tail -n 5 build/xcodebuild.log
-          ls -la "$APP_PATH"
 
       - name: Rodar no Simulador e tirar capturas
         run: |
@@ -116,47 +200,7 @@ jobs:
           ls -la screenshots
 
       - name: Empacotar o .app do Simulador
-        if: success()
         run: ditto -c -k --keepParent "$APP_PATH" build/iosApp-simulator.zip
-
-      - name: Compilar para aparelho (Release, sem assinatura)
-        run: |
-          if ! xcodebuild \
-              -project iosApp/iosApp.xcodeproj \
-              -scheme iosApp \
-              -configuration Release \
-              -sdk iphoneos \
-              -destination 'generic/platform=iOS' \
-              -derivedDataPath build/ios-device \
-              ARCHS=arm64 ONLY_ACTIVE_ARCH=NO \
-              CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
-              build > build/xcodebuild-device.log 2>&1; then
-            echo "::group::Erros"
-            grep -nE "error:|e: |FAILURE|What went wrong" build/xcodebuild-device.log | head -n 80 || true
-            echo "::endgroup::"
-            tail -n 120 build/xcodebuild-device.log
-            exit 1
-          fi
-          tail -n 5 build/xcodebuild-device.log
-
-      - name: Conferir que o binário é de aparelho (iosArm64)
-        run: |
-          APP=build/ios-device/Build/Products/Release-iphoneos/iosApp.app
-          echo "Tarefas do Kotlin/Native no build:"
-          grep -oE ":renderer:[A-Za-z]*IosArm64[A-Za-z]*|:renderer:[A-Za-z]*IosSimulatorArm64[A-Za-z]*" build/xcodebuild-device.log | sort -u
-          grep -qE ":renderer:link[A-Za-z]*FrameworkIosArm64" build/xcodebuild-device.log \
-            || { echo "O framework Kotlin não foi gerado para iosArm64"; exit 1; }
-          echo "Arquiteturas: $(lipo -archs "$APP/iosApp")"
-          xcrun vtool -show-build "$APP/iosApp" | tee build/vtool.txt
-          [ "$(lipo -archs "$APP/iosApp")" = "arm64" ] || { echo "Esperava só arm64"; exit 1; }
-          grep -qE "platform IOS$" build/vtool.txt || { echo "Esperava a plataforma IOS (aparelho)"; exit 1; }
-
-      - name: Empacotar o .ipa (sem assinatura)
-        run: |
-          rm -rf build/Payload && mkdir -p build/Payload
-          cp -R build/ios-device/Build/Products/Release-iphoneos/iosApp.app build/Payload/
-          (cd build && zip -qry iosApp-unsigned.ipa Payload)
-          ls -la build/iosApp-unsigned.ipa
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -166,22 +210,15 @@ jobs:
           if-no-files-found: ignore
 
       - uses: actions/upload-artifact@v4
-        if: success()
         with:
           name: iosApp-simulator
           path: build/iosApp-simulator.zip
 
       - uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: iosApp-device-ipa
-          path: build/iosApp-unsigned.ipa
-
-      - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: xcodebuild-log
-          path: build/xcodebuild*.log
+          name: xcodebuild-simulator-log
+          path: build/xcodebuild.log
           if-no-files-found: ignore
 
   # Assinatura e envio ao TestFlight. Precisa da conta paga do Apple Developer Program e destes
@@ -194,7 +231,7 @@ jobs:
   #   ASC_KEY_P8_BASE64              o arquivo .p8 dessa chave, em base64
   testflight:
     if: github.event_name == 'workflow_dispatch' && inputs.testflight
-    needs: simulator
+    needs: device
     runs-on: macos-latest
     timeout-minutes: 60
     env:
@@ -221,6 +258,12 @@ jobs:
           java-version: 17
 
       - uses: gradle/actions/setup-gradle@v4
+
+      - name: Cache do Kotlin/Native
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('gradle/libs.versions.toml') }}
 
       - name: Instalar o certificado e o perfil
         env:
